@@ -1,0 +1,56 @@
+{
+  "incidencias": [
+    {
+      "id": 1,
+      "nombre": "Alejandro",
+      "apellido": "Gray",
+      "horaEntrada": "09:00",
+      "horaSalida": "13:00",
+      "comentario": "Practicante en NPG"
+    },
+    {
+      "id": 2,
+      "nombre": "Arturo",
+      "apellido": "Huapaya",
+      "horaEntrada": "08:00",
+      "horaSalida": "16:00",
+      "comentario": "Trabajador en NPG"
+    },
+    {
+      "nombre": "Lidia",
+      "apellido": "Guissa",
+      "horaEntrada": "09:00",
+      "horaSalida": "19:00",
+      "comentario": "Secretaria",
+      "id": 4
+    },
+    {
+      "nombre": "Jaime",
+      "apellido": "Gray",
+      "horaEntrada": "09:00",
+      "horaSalida": "18:00",
+      "comentario": "Jefe de la empresa",
+      "id": 5
+    }
+  ],
+  "usuarios": [
+    {
+      "nombre": "Alejandro",
+      "apellido": "Gray",
+      "usuario": "agray",
+      "correo": "u201618549@upc.edu.pe",
+      "contraseña": "grayshigami",
+      "tipoUsuario": "",
+      "id": 1
+    },
+    {
+      "nombre": "Arturo",
+      "apellido": "Huapaya",
+      "usuario": "ahuapaya",
+      "correo": "ahuapaya@npg.pe",
+      "contraseña": "djfjghfjhd",
+      "tipoUsuario": "administrador",
+      "id": 2
+    }
+  ]
+}
