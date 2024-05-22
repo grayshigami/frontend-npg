@@ -1,12 +1,12 @@
 <template>
     <div class="form-data">
         <h1>Editar incidencia</h1>
-        <input type="text" placeholder="Nombre" v-model="nombre">
-        <input type="text" placeholder="Apellido">
-        <input type="time" placeholder="Entrada">
-        <input type="time" placeholder="Salida">
-        <input type="text" placeholder="Comentario">
-        <button>
+        <input type="text" placeholder="Nombre" name="nombre" v-model="nombre">
+        <input type="text" placeholder="Apellido" name="apellido" v-model="apellido">
+        <input type="time" placeholder="Entrada" name="horaEntrada" v-model="horaEntrada">
+        <input type="time" placeholder="Salida" name="horaSalida" v-model="horaSalida">
+        <input type="text" placeholder="Comentario" name="comentario" v-model="comentario">
+        <button @click="guardarEdicion">
             <i class="fa-solid fa-floppy-disk"></i>
             Guardar
         </button>
@@ -19,22 +19,46 @@
 <script>
 export default {
     name: 'editar-incidencia',
-    props: ['itemEditado'],
+    props: {
+        itemEditado: {
+            type: Object,
+            default: () => ({nombre: '', apellido: '', horaEntrada: '', horaSalida: '', comentario: ''})
+        }
+    },
     data() {
         return {
-            nombre: this.itemEditado ? this.itemEditado.nombre : ''
+            nombre: '',
+            apellido: '',
+            horaEntrada: '',
+            horaSalida: '',
+            comentario: ''
         }
     },
     watch: {
-        itemEditado(newVal) {
-            if (newVal) {
-                this.nombre = newVal.nombre;
+        itemEditado: {
+            immediate: true,
+            handler(newVal) {
+                if (newVal) {
+                    this.nombre = newVal.nombre || '';
+                    this.apellido = newVal.apellido || '';
+                    this.horaEntrada = newVal.horaEntrada || '';
+                    this.horaSalida = newVal.horaSalida || '';
+                    this.comentario = newVal.comentario || '';
+                }
             }
         }
     },
     methods: {
         guardarEdicion() {
-            this.$emit('guardar-edicion', {...this.itemEditado, nombre: this.nombre});
+            this.$emit('guardar-edicion', 
+            {...this.itemEditado, 
+                nombre: this.nombre,
+                apellido: this.apellido,
+                horaEntrada: this.horaEntrada,
+                horaSalida: this.horaSalida,
+                comentario: this.comentario
+            });
+            this.$router.back();
         },
         goBack() {
             this.$router.back();

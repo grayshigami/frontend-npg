@@ -17,13 +17,13 @@
             <table>
                 <thead>
                     <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Entrada</th>
-                    <th>Salida</th>
-                    <th>Comentario</th>
-                    <th>Acciones</th>
-                </tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Comentario</th>
+                        <th>Acciones</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <tr v-for="item in items" :key="item.id">
@@ -53,7 +53,7 @@ export default {
     data() {
         return {
             items: [],
-            itemEditado: null
+            itemEditado: {nombre: '', apellido: '', horaEntrada: '', horaSalida: '', comentario: ''}
         }
     },
     mounted() {
@@ -75,18 +75,20 @@ export default {
         },
         editarItem(item) {
             this.itemEditado = {...item};
+            console.log(this.itemEditado);
             this.$router.push('/editar-incidencia');
         },
         async guardarEdicion(nuevoItem) {
+            console.log(this.itemEditado);
             try {
-                await axios.put(`http://localhost:3000/incidencias/${nuevoItem}`, nuevoItem);
+                await axios.put(`http://localhost:3000/incidencias/${nuevoItem.id}`, nuevoItem);
                 const index = this.items.findIndex(item => item.id === nuevoItem.id);
 
                 if (index !== -1) {
                     this.items.splice(index, 1, nuevoItem);
                 }
 
-                this.itemEditado = null;
+                this.itemEditado = {nombre: '', apellido: '', horaEntrada: '', horaSalida: '', comentario: ''};
             } catch (error) {
                 console.error('Error saving edit:', error);
             }
