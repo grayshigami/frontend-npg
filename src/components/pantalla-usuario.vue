@@ -1,5 +1,6 @@
 <template>
     <div class="general">
+        <img src="../assets/logo-negro-Sinfondo.png" alt="" width="100" height="80">
         <div class="screen-data">
             <input type="date">
             <button @click="goToIncidencia">
@@ -12,7 +13,6 @@
             </button>
         </div>
         <RegistrarIncidencia @nuevoElemento="agregarElemento" />
-        <EditarIncidencia :itemEditado="itemEditado" @guardar-edicion="guardarEdicion" />
         <div class="table-data">
             <table>
                 <thead>
@@ -29,8 +29,8 @@
                     <tr v-for="item in items" :key="item.id">
                         <td>{{ item.nombre }}</td>
                         <td>{{ item.apellido }}</td>
-                        <td>{{ item.horaEntrada }}</td>
-                        <td>{{ item.horaSalida }}</td>
+                        <td>{{ formatDate(item.horaEntrada) }}</td>
+                        <td>{{ item.horaSalida ? formatDate(item.horaSalida) : null }}</td>
                         <td>{{ item.comentario }}</td>
                         <td>
                             <button @click="editarItem(item)"><i class="fa-solid fa-pencil"></i></button>
@@ -46,6 +46,8 @@
 import axios from 'axios';
 import RegistrarIncidencia from './registrar-incidencia.vue';
 import EditarIncidencia from './editar-incidencia.vue';
+import { format } from 'date-fns';
+import { Date } from 'core-js';
 
 export default {
     name: 'pantalla-usuario',
@@ -60,6 +62,9 @@ export default {
         this.getIncidencias();
     },
     methods: {
+        formatDate(date) {
+            return format(new Date(date), 'yyyy-MM-dd HH:mm')
+        },
         async agregarElemento(nuevoElemento) {
             this.items.push(nuevoElemento);
         },
@@ -79,7 +84,7 @@ export default {
             this.$router.push('/editar-incidencia');
         },
         async guardarEdicion(nuevoItem) {
-            console.log(this.itemEditado);
+            console.log(nuevoItem);
             try {
                 await axios.put(`http://localhost:3000/incidencias/${nuevoItem.id}`, nuevoItem);
                 const index = this.items.findIndex(item => item.id === nuevoItem.id);
@@ -163,5 +168,9 @@ th, td {
 
 td {
     border-top: 1px solid black;
+}
+
+img {
+    margin-bottom: 10px;
 }
 </style>

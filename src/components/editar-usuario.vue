@@ -10,6 +10,10 @@
             <i class="fa-solid fa-floppy-disk"></i>
             Guardar
         </button>
+        <button @click="goBack()">
+            <i class="fa-solid fa-arrow-left"></i>
+            Volver
+        </button>
     </div>
 </template>
 <script>

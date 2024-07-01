@@ -3,14 +3,7 @@
         <h1>Registrar incidencia</h1>
         <input type="text" placeholder="Nombre" v-model="nuevoElemento.nombre">
         <input type="text" placeholder="Apellido" v-model="nuevoElemento.apellido">
-        <span>
-            <input type="time" placeholder="Hora de entrada" v-model="nuevoElemento.horaEntrada">
-            <button>Copiar</button>
-        </span>
-        <span>
-            <input type="time" placeholder="Hora de salida" v-model="nuevoElemento.horaSalida">
-            <button>Copiar</button>
-        </span>
+        <input type="datetime-local" placeholder="Hora de entrada" v-model="nuevoElemento.horaEntrada">
         <input type="text" placeholder="Comentario" v-model="nuevoElemento.comentario">
         <button @click="agregarElemento">
             <i class="fa-solid fa-floppy-disk"></i>
@@ -31,7 +24,6 @@ export default {
                 nombre: '',
                 apellido: '',
                 horaEntrada: '',
-                horaSalida: '',
                 comentario: ''
             }
         }
@@ -56,9 +48,9 @@ export default {
                     nombre: '',
                     apellido: '',
                     horaEntrada: '',
-                    horaSalida: '',
                     comentario: ''
                 };
+                this.$router.back();
             } catch (error) {
                 console.error('Error al agregar elemento:', error);
             }

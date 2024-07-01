@@ -13,7 +13,7 @@
                     <tr>
                     <th>Nombre</th>
                     <th>Apellido</th>
-                    <th>Usuario</th>
+                    <th>Nombre de usuario</th>
                     <th>Correo</th>
                     <th>Tipo de usuario</th>
                     <th>Opciones</th>
@@ -23,9 +23,9 @@
                     <tr v-for="item in items" :key="item.id">
                         <td>{{ item.nombre }}</td>
                         <td>{{ item.apellido }}</td>
-                        <td>{{ item.usuario }}</td>
+                        <td>{{ item.nombreUsuario }}</td>
                         <td>{{ item.correo }}</td>
-                        <td>{{ item.tipoUsuario }}</td>
+                        <td>{{ item.tipoUsuario == 0 ? 'Normal' : 'Administrador' }}</td>
                         <td>
                             <button @click="goToEdit"><i class="fa-solid fa-pencil"></i></button>
                             <button @click="eliminarElemento(item.id)"><i class="fa-solid fa-trash"></i></button>

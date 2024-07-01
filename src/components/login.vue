@@ -1,5 +1,6 @@
 <template>
     <div class="form-data">
+        <img src="../assets/logo-negro-Sinfondo.png" width="250" height="120">
         <h1>Login</h1>
         <input type="text" placeholder="Usuario">
         <input type="password" placeholder="Contraseña">
@@ -41,6 +42,10 @@ export default {
     @media (max-width: 800px) {
         width: 80%;
     }
+}
+
+img {
+    align-self: center;
 }
 
 input, button {

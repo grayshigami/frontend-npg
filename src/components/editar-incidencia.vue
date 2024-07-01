@@ -20,10 +20,7 @@
 export default {
     name: 'editar-incidencia',
     props: {
-        itemEditado: {
-            type: Object,
-            default: () => ({nombre: '', apellido: '', horaEntrada: '', horaSalida: '', comentario: ''})
-        }
+        
     },
     data() {
         return {
@@ -34,32 +31,7 @@ export default {
             comentario: ''
         }
     },
-    watch: {
-        itemEditado: {
-            immediate: true,
-            handler(newVal) {
-                if (newVal) {
-                    this.nombre = newVal.nombre || '';
-                    this.apellido = newVal.apellido || '';
-                    this.horaEntrada = newVal.horaEntrada || '';
-                    this.horaSalida = newVal.horaSalida || '';
-                    this.comentario = newVal.comentario || '';
-                }
-            }
-        }
-    },
     methods: {
-        guardarEdicion() {
-            this.$emit('guardar-edicion', 
-            {...this.itemEditado, 
-                nombre: this.nombre,
-                apellido: this.apellido,
-                horaEntrada: this.horaEntrada,
-                horaSalida: this.horaSalida,
-                comentario: this.comentario
-            });
-            this.$router.back();
-        },
         goBack() {
             this.$router.back();
         }

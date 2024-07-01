@@ -31,8 +31,8 @@
                     <tr v-for="item in items" :key="item.id">
                         <td>{{ item.nombre }}</td>
                         <td>{{ item.apellido }}</td>
-                        <td>{{ item.horaEntrada }}</td>
-                        <td>{{ item.horaSalida }}</td>
+                        <td>{{ formatDate(item.horaEntrada) }}</td>
+                        <td>{{ item.horaSalida ? formatDate(item.horaSalida) : null }}</td>
                         <td>{{ item.comentario }}</td>
                         <td>
                             <button @click="goToEdit"><i class="fa-solid fa-pencil"></i></button>
@@ -46,6 +46,8 @@
 </template>
 <script>
 import axios from 'axios';
+import { format } from 'date-fns';
+import { Date } from 'core-js';
 
 export default {
     name: 'pantalla-administrador',
@@ -58,6 +60,9 @@ export default {
         this.getIncidencias();
     },
     methods: {
+        formatDate(date) {
+            return format(new Date(date), 'yyyy-MM-dd HH:mm')
+        },
         getIncidencias() {
             axios.get('http://localhost:3000/incidencias')
             .then(response => {

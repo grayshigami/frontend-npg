@@ -3,13 +3,10 @@
         <h1>Crear usuario</h1>
         <input type="text" placeholder="Nombre" v-model="nuevoElemento.nombre">
         <input type="text" placeholder="Apellido" v-model="nuevoElemento.apellido">
-        <input type="text" placeholder="Nombre de usuario" v-model="nuevoElemento.usuario">
+        <input type="text" placeholder="Nombre de usuario" v-model="nuevoElemento.nombreUsuario">
         <input type="text" placeholder="Correo" v-model="nuevoElemento.correo">
-        <input type="password" placeholder="Contraseña" v-model="nuevoElemento.contraseña">
-        <select id="tipoUsuario" v-model="nuevoElemento.tipoUsuario">
-            <option value="Normal" selected>Normal</option>
-            <option value="Administrador">Administrador</option>
-        </select>
+        <input type="password" placeholder="Contraseña" v-model="nuevoElemento.contrasena">
+        <input type="number" placeholder="Tipo de usuario" v-model="nuevoElemento.tipoUsuario">
         <button @click="agregarElemento">
             <i class="fa-solid fa-floppy-disk"></i>
             Guardar
@@ -28,10 +25,10 @@ export default {
             nuevoElemento: {
                 nombre: '',
                 apellido: '',
-                usuario: '',
+                nombreUsuario: '',
                 correo: '',
-                contraseña: '',
-                tipoUsuario: ''
+                contrasena: '',
+                tipoUsuario: 1
             }
         }
     },
@@ -54,11 +51,12 @@ export default {
                 this.nuevoElemento = {
                     nombre: '',
                     apellido: '',
-                    usuario: '',
+                    nombreUsuario: '',
                     correo: '',
-                    contraseña: '',
-                    tipoUsuario: ''
+                    contrasena: '',
+                    tipoUsuario: 0
                 };
+                this.$router.back();
             } catch (error) {
                 console.error('Error al agregar elemento:', error);
             }
