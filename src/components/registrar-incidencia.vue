@@ -18,13 +18,15 @@
 <script>
 export default {
     name: 'registrar-incidencia',
+    props: ['userId'],
     data() {
         return {
             nuevoElemento: {
                 nombre: '',
                 apellido: '',
                 horaEntrada: '',
-                comentario: ''
+                comentario: '',
+                usuarioId: 2
             }
         }
     },
@@ -34,6 +36,7 @@ export default {
         },
         async agregarElemento() {
             try {
+                console.log('userId:', this.userId);
                 const response = await fetch('http://localhost:3000/incidencias', {
                     method: 'POST',
                     headers: {

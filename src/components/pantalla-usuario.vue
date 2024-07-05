@@ -1,7 +1,10 @@
 <template>
     <div class="general">
-        <img src="../assets/logo-negro-Sinfondo.png" alt="" width="100" height="80">
         <div class="screen-data">
+            <div class="usuario-header">
+                <img src="../assets/logo-negro-Sinfondo.png" alt="" width="10%" height="10%">
+                <p class="b-user">Bienvenido {{ name }}</p>
+            </div>
             <input type="date">
             <button @click="goToIncidencia">
                 <i class="fa-solid fa-plus"></i>
@@ -12,7 +15,8 @@
                 Exportar
             </button>
         </div>
-        <RegistrarIncidencia @nuevoElemento="agregarElemento" />
+        <p>{{ this.userId }}</p>
+        <RegistrarIncidencia @nuevoElemento="agregarElemento" :userId="userId" />
         <div class="table-data">
             <table>
                 <thead>
@@ -55,11 +59,17 @@ export default {
     data() {
         return {
             items: [],
-            itemEditado: {nombre: '', apellido: '', horaEntrada: '', horaSalida: '', comentario: ''}
+            itemEditado: {nombre: '', apellido: '', horaEntrada: '', horaSalida: '', comentario: ''},
+            name: '',
+            userId: ''
         }
     },
     mounted() {
         this.getIncidencias();
+    },
+    created() {
+        this.name = localStorage.getItem('name');
+        this.userId = localStorage.getItem('user_id');
     },
     methods: {
         formatDate(date) {
@@ -122,6 +132,16 @@ export default {
 <style scoped>
 * {
     font-family: sans-serif;
+}
+
+.usuario-header {
+    display: flex;
+    justify-content: center;
+}
+
+.b-user {
+    margin-left: 20px;
+    font-weight: bold;
 }
 
 .general {

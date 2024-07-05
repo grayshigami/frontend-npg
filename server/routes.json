@@ -1,4 +1,0 @@
-{
-    "/incidencias/*": "/incidencias/$1",
-    "/usuarios/*": "/usuarios/$1"
-}

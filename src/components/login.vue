@@ -2,27 +2,49 @@
     <div class="form-data">
         <img src="../assets/logo-negro-Sinfondo.png" width="250" height="120">
         <h1>Login</h1>
-        <input type="text" placeholder="Usuario">
-        <input type="password" placeholder="Contraseña">
-        <button @click="goToScreen">
+        <input type="text" placeholder="Usuario" v-model="nombreUsuario">
+        <input type="password" placeholder="Contraseña" v-model="contrasena">
+        <button @click="login">
             <i class="fa-solid fa-user"></i>
             Iniciar sesión
         </button>
-        <button @click="goToAdmin">
-            <i class="fa-solid fa-user"></i>
-            Iniciar como administrador
-        </button>
+        <div class="err" v-if="errorMessage">{{ errorMessage }}</div>
     </div>
 </template>
 <script>
+import axios from 'axios';
+
 export default {
     name: 'login-component',
+    data() {
+        return {
+            nombreUsuario: '',
+            contrasena: '',
+            errorMessage: ''
+        }
+    },
     methods: {
-        goToScreen() {
-            this.$router.push('/pantalla-usuario');
-        },
-        goToAdmin() {
-            this.$router.push('/pantalla-administrador')
+        async login() {
+            try {
+                const response = await axios.post('http://localhost:3000/auth/login', {
+                    nombreUsuario: this.nombreUsuario,
+                    contrasena: this.contrasena
+                });
+                const { access_token, user_type, name, user_id } = response.data;
+                localStorage.setItem('token', access_token);
+                localStorage.setItem('user_type', user_type);
+                localStorage.setItem('name', name);
+                localStorage.setItem('user_id', user_id);
+
+                if (user_type == 0) {
+                    this.$router.push('/pantalla-usuario');
+                } else {
+                    this.$router.push('/pantalla-administrador');
+                }
+                console.log('userId:', user_id);
+            } catch (error) {
+                this.errorMessage = "Usuario o contraseña invalidos";
+            }
         }
     }
 }
@@ -30,6 +52,10 @@ export default {
 <style>
 * {
     font-family: sans-serif;
+}
+
+.err {
+    color: red;
 }
 
 .form-data {

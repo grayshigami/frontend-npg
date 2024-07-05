@@ -1,6 +1,10 @@
 <template>
     <div class="general">
         <div class="screen-data">
+            <div class="usuario-header">
+                <img src="../assets/logo-negro-Sinfondo.png" alt="" width="10%" height="10%">
+                <p class="b-user">Bienvenido {{ name }}</p>
+            </div>
             <input type="date">
             <button @click="goToIncidencia">
                 <i class="fa-solid fa-plus"></i>
@@ -53,8 +57,12 @@ export default {
     name: 'pantalla-administrador',
     data() {
         return {
-            items: []
+            items: [],
+            name: ''
         }
+    },
+    created() {
+        this.name = localStorage.getItem('name');
     },
     mounted() {
         this.getIncidencias();
@@ -97,6 +105,17 @@ export default {
 <style>
 * {
     font-family: sans-serif;
+}
+
+.usuario-header {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.b-user {
+    margin-left: 20px;
+    font-weight: bold;
 }
 
 .general {

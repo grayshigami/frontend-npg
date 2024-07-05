@@ -1,6 +1,7 @@
 <template>
     <div class="general">
         <div class="screen-data">
+            <img src="../assets/logo-negro-Sinfondo.png" alt="" width="100" height="80">
             <button @click="goToCreate">
                 <i class="fa-solid fa-plus"></i>
                 Crear usuario
@@ -25,7 +26,7 @@
                         <td>{{ item.apellido }}</td>
                         <td>{{ item.nombreUsuario }}</td>
                         <td>{{ item.correo }}</td>
-                        <td>{{ item.tipoUsuario == 0 ? 'Normal' : 'Administrador' }}</td>
+                        <td>{{ item.tipoUsuario == 0 ? 'Usuario' : 'Administrador' }}</td>
                         <td>
                             <button @click="goToEdit"><i class="fa-solid fa-pencil"></i></button>
                             <button @click="eliminarElemento(item.id)"><i class="fa-solid fa-trash"></i></button>
