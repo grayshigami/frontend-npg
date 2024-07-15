@@ -1,7 +1,7 @@
 <template>
     <div class="form-data">
         <img src="../assets/logo-negro-Sinfondo.png" width="250" height="120">
-        <h1>Login</h1>
+        <h1>Iniciar sesión</h1>
         <input type="text" placeholder="Usuario" v-model="nombreUsuario">
         <input type="password" placeholder="Contraseña" v-model="contrasena">
         <button @click="login">
@@ -31,10 +31,12 @@ export default {
                     contrasena: this.contrasena
                 });
                 const { access_token, user_type, name, user_id } = response.data;
+                const tokenExpiration = new Date().getTime() + (response.data.expiresIn * 1000);
                 localStorage.setItem('token', access_token);
                 localStorage.setItem('user_type', user_type);
                 localStorage.setItem('name', name);
                 localStorage.setItem('user_id', user_id);
+                localStorage.setItem('tokenExpiration', tokenExpiration);
 
                 if (user_type == 0) {
                     this.$router.push('/pantalla-usuario');
@@ -72,6 +74,11 @@ export default {
 
 img {
     align-self: center;
+    
+    @media (max-width: 800px) {
+        width: 30%;
+        height: 30%;
+    }
 }
 
 input, button {

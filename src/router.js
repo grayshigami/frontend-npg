@@ -1,5 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+const isAuthenticated = () => {
+    const token = localStorage.getItem('token');
+
+    if (!token) return false;
+
+    const tokenExpiration = localStorage.getItem('tokenExpiration');
+    const now = new Date().getTime();
+
+    if (tokenExpiration && now > tokenExpiration) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('tokenExpiration');
+        return false;
+    }
+
+    return true;
+};
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -15,7 +32,8 @@ const router = createRouter({
         {
             path: '/registrar-incidencia',
             name: 'registrar-incidencia',
-            component: () => import("@/components/registrar-incidencia.vue")
+            component: () => import("@/components/registrar-incidencia.vue"),
+            props: true
         },
         {
             path: '/crear-usuario',
@@ -45,9 +63,18 @@ const router = createRouter({
         {
             path: '/editar-incidencia',
             name: 'editar-incidencia',
-            component: () => import("@/components/editar-incidencia.vue")
+            component: () => import("@/components/editar-incidencia.vue"),
+            props: true
         }
     ]
 })
+
+router.beforeEach((to, from, next) => {
+    if (to.name !== 'login-component' && !isAuthenticated()) {
+        next({name: 'login-component'})
+    } else {
+        next();
+    }
+});
 
 export default router

@@ -1,27 +1,60 @@
 <template>
     <div class="form-data">
         <h1>Editar usuario</h1>
-        <input type="text" placeholder="Nombre">
-        <input type="text" placeholder="Apellido">
-        <input type="text" placeholder="Nombre de usuario">
-        <input type="text" placeholder="Correo">
-        <input type="password" placeholder="Contraseña">
-        <button @click="goBack()">
+        <input type="text" placeholder="Nombre" v-model="usuarioLocal.nombre">
+        <input type="text" placeholder="Apellido" v-model="usuarioLocal.apellido">
+        <input type="text" placeholder="Nombre de usuario" v-model="usuarioLocal.nombreUsuario">
+        <input type="text" placeholder="Correo" v-model="usuarioLocal.correo">
+        <input type="password" placeholder="Contraseña" v-model="usuarioLocal.contrasena">
+        <select id="selectTipoUsuario" v-model="usuarioLocal.tipoUsuario">
+            <option :value="0">Usuario</option>
+            <option :value="1">Administrador</option>
+        </select>
+        <button @click="updateUsuario">
             <i class="fa-solid fa-floppy-disk"></i>
             Guardar
         </button>
-        <button @click="goBack()">
+        <button @click="goBack">
             <i class="fa-solid fa-arrow-left"></i>
             Volver
         </button>
     </div>
 </template>
 <script>
+import axios from 'axios';
+
 export default {
     name: 'editar-usuario',
+    props: {
+        usuario: Object
+    },
+    data() {
+        return {
+            usuarioLocal: {...this.usuario}
+        }
+    },
     methods: {
+        async updateUsuario() {
+            try {
+                await axios.put(`http://localhost:3000/usuarios/${this.usuarioLocal.id}`, this.usuarioLocal);
+                this.$emit('close');
+                this.$emit('updated');
+            } catch (error) {
+                console.error(error);
+            }
+
+            this.$router.back();
+        },
         goBack() {
-            this.$router.push('/lista-usuarios')
+            this.$router.back();
+        }
+    },
+    watch: {
+        usuario: {
+            handler(newValue) {
+                this.usuarioLocal = {...newValue};
+            },
+            deep: true
         }
     }
 }

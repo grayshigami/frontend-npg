@@ -13,6 +13,7 @@
             <i class="fa-solid fa-arrow-left"></i>
             Volver
         </button>
+        <p>usuarioId: {{ this.usuarioId }}</p>
     </div>
 </template>
 <script>
@@ -26,7 +27,7 @@ export default {
                 apellido: '',
                 horaEntrada: '',
                 comentario: '',
-                usuarioId: 2
+                usuarioId: this.userId
             }
         }
     },
