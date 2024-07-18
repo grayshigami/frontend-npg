@@ -3,7 +3,7 @@
         <div class="screen-data">
             <div class="usuario-header">
                 <img src="../assets/logo-negro-Sinfondo.png" alt="" width="10%" height="10%">
-                <p class="b-user">Bienvenido {{ name }}</p>
+                <h2 class="b-user">Bienvenido {{ name }}</h2>
             </div>
             <input type="date" v-model="selectedDate" @change="filterIncidencias">
             <button @click="goToIncidencia">

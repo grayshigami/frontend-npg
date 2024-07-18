@@ -31,9 +31,15 @@ export default {
                 nombreUsuario: '',
                 correo: '',
                 contrasena: '',
-                tipoUsuario: 0
+                tipoUsuario: 0,
+                registroId: null,
+                actualizacionId: null
             }
         }
+    },
+    created() {
+        this.nuevoElemento.registroId = localStorage.getItem('user_id');
+        this.nuevoElemento.actualizacionId = localStorage.getItem('user_id');
     },
     methods: {
         goBack() {

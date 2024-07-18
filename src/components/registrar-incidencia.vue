@@ -3,7 +3,10 @@
         <h1>Registrar incidencia</h1>
         <input type="text" placeholder="Nombre" v-model="nuevoElemento.nombre">
         <input type="text" placeholder="Apellido" v-model="nuevoElemento.apellido">
-        <input type="datetime-local" placeholder="Hora de entrada" v-model="nuevoElemento.horaEntrada">
+        <span>
+            <input type="datetime-local" placeholder="Hora de entrada" v-model="nuevoElemento.horaEntrada">
+            <button @click="setCurrentTime">Actual</button>
+        </span>
         <input type="text" placeholder="Comentario" v-model="nuevoElemento.comentario">
         <button @click="agregarElemento">
             <i class="fa-solid fa-floppy-disk"></i>
@@ -13,13 +16,11 @@
             <i class="fa-solid fa-arrow-left"></i>
             Volver
         </button>
-        <p>usuarioId: {{ this.usuarioId }}</p>
     </div>
 </template>
 <script>
 export default {
     name: 'registrar-incidencia',
-    props: ['userId'],
     data() {
         return {
             nuevoElemento: {
@@ -27,13 +28,23 @@ export default {
                 apellido: '',
                 horaEntrada: '',
                 comentario: '',
-                usuarioId: this.userId
+                usuarioId: null
             }
         }
+    },
+    created() {
+        this.nuevoElemento.usuarioId = localStorage.getItem('user_id');
     },
     methods: {
         goBack() {
             this.$router.back();
+        },
+        setCurrentTime() {
+            const currentTime = new Date();
+            const hours = String(currentTime.getHours()).padStart(2, '0');
+            const minutes = String(currentTime.getMinutes()).padStart(2, '0');
+            const formattedTime = `${hours}:${minutes}`;
+            this.nuevoElemento.horaEntrada = formattedTime;
         },
         async agregarElemento() {
             try {

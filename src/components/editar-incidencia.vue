@@ -3,8 +3,14 @@
         <h1>Editar incidencia</h1>
         <input type="text" placeholder="Nombre" name="nombre" v-model="incidencia.nombre">
         <input type="text" placeholder="Apellido" name="apellido" v-model="incidencia.apellido">
-        <input type="datetime-local" placeholder="Entrada" name="horaEntrada" v-model="incidencia.horaEntrada">
-        <input type="datetime-local" placeholder="Salida" name="horaSalida" v-model="incidencia.horaSalida">
+        <span>
+            <input type="datetime-local" placeholder="Entrada" name="horaEntrada" v-model="incidencia.horaEntrada">
+            <button @click="setCurrentTime">Actual</button>
+        </span>
+        <span>
+            <input type="datetime-local" placeholder="Salida" name="horaSalida" v-model="incidencia.horaSalida">
+            <button @click="setCurrentTime">Actual</button>
+        </span>
         <input type="text" placeholder="Comentario" name="comentario" v-model="comentario">
         <button @click="updateIncidencia">
             <i class="fa-solid fa-floppy-disk"></i>
@@ -14,7 +20,6 @@
             <i class="fa-solid fa-arrow-left"></i>
             Volver
         </button>
-        <p>incidenciaId: {{ this.incidenciaId }}</p>
     </div>
 </template>
 <script>
@@ -36,6 +41,13 @@ export default {
         this.fetchIncidencia();
     },
     methods: {
+        setCurrentTime() {
+            const currentTime = new Date();
+            const hours = String(currentTime.getHours()).padStart(2, '0');
+            const minutes = String(currentTime.getMinutes()).padStart(2, '0');
+            const formattedTime = `${hours}:${minutes}`;
+            this.incidencia.horaEntrada = formattedTime;
+        },
         async fetchIncidencia() {
             try {
                 const response = await fetch(`http://localhost:3000/incidencias/${this.incidenciaId}`);
@@ -114,5 +126,18 @@ button {
 
 button:hover {
     cursor: pointer;
+}
+
+span {
+    width: 113.5%;
+    display: flex;
+}
+
+span input {
+    width: 100%;
+}
+
+span button {
+    margin-left: 8px;
 }
 </style>

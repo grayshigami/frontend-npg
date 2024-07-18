@@ -30,13 +30,14 @@ export default {
                     nombreUsuario: this.nombreUsuario,
                     contrasena: this.contrasena
                 });
-                const { access_token, user_type, name, user_id } = response.data;
+                const { access_token, user_type, name, user_id, register_id } = response.data;
                 const tokenExpiration = new Date().getTime() + (response.data.expiresIn * 1000);
                 localStorage.setItem('token', access_token);
                 localStorage.setItem('user_type', user_type);
                 localStorage.setItem('name', name);
                 localStorage.setItem('user_id', user_id);
                 localStorage.setItem('tokenExpiration', tokenExpiration);
+                localStorage.setItem('register_id', register_id);
 
                 if (user_type == 0) {
                     this.$router.push('/pantalla-usuario');
