@@ -10,60 +10,54 @@
             </button>
         </div>
         <div class="form-data">
-        <h1>Editar incidencia</h1>
-        <input type="text" placeholder="Nombre" name="nombre" v-model="incidenciaLocal.nombre">
-        <input type="text" placeholder="Empresa" name="empresa" v-model="incidenciaLocal.empresa">
-        <input type="datetime-local" placeholder="Entrada" name="horaEntrada" v-model="incidenciaLocal.horaEntrada">
-        <input type="datetime-local" placeholder="Salida" name="horaSalida" v-model="incidenciaLocal.horaSalida">
-        <input type="text" placeholder="Comentario" name="comentario" v-model="incidenciaLocal.comentario">
-        <button @click="updateIncidencia">
-            <i class="fa-solid fa-floppy-disk"></i>
-            Guardar
-        </button>
-        <button @click="goBack()">
-            <i class="fa-solid fa-arrow-left"></i>
-            Volver
-        </button>
-        <p v-if="errorMessage">{{ errorMessage }}</p>
-    </div>
+            <h1>Cambiar contraseña</h1>
+            <input type="password" placeholder="Contraseña actual" v-model="actual" required>
+            <input type="password" placeholder="Contraseña nueva" v-model="nueva" required>
+            <button @click="updateContrasena">
+                <i class="fa-solid fa-floppy-disk"></i>
+                Guardar
+            </button>
+            <button @click="goBack">
+                <i class="fa-solid fa-arrow-left"></i>
+                Volver
+            </button>
+            <p v-if="message">{{ message }}</p>
+        </div>
     </div>
 </template>
 <script>
-import { ip_address } from '@/ipconst/ip-laptop';
 import axios from 'axios';
+import { ip_address } from '@/ipconst/ip-laptop';
 
 export default {
-    name: 'editar-incidencia',
+    name: 'cambiar-contrasena',
     data() {
         return {
             name: '',
+            actual: '',
+            nueva: '',
+            message: '',
             actualizacionId: null,
-            incidenciaLocal: {},
-            errorMessage: ''
+            usuarioId: null
         }
     },
     created() {
         this.name = localStorage.getItem('name');
-        this.actualizacionId = localStorage.getItem('user_id');
-    },
-    async mounted() {
-        const response = await axios.get(`http://${ip_address}:3002/incidencias/${this.$route.query.incidencia}`);
-        this.incidenciaLocal = response.data;
+        this.usuarioId = localStorage.getItem('user_id');
     },
     methods: {
-        async updateIncidencia() {
+        async updateContrasena() {
             try {
-                if (!this.incidenciaLocal.nombre) {
-                    this.errorMessage = "El nombre no debe quedar vacío";
-                }
-
-                this.incidenciaLocal.actualizacionId = this.actualizacionId;
-                let request = {...this.incidenciaLocal};
-                delete request.id;
-                await axios.put(`http://${ip_address}:3002/incidencias/${this.incidenciaLocal.id}`, request);
+                const response = await axios.patch(`http://${ip_address}:3002/auth/update-contrasena/${this.usuarioId}`, {
+                    actual: this.actual,
+                    nueva: this.nueva
+                });
+                this.message = response.data.message;
+                this.actual = '';
+                this.nueva = '';
                 this.$router.back();
             } catch (error) {
-                console.error(error);
+                this.message = error.response.data.message || "Error al actualizar contraseña";
             }
         },
         logout() {
@@ -157,10 +151,6 @@ button {
     color: white;
     background-color: rgb(21, 96, 130);
     font-weight: bold;
-
-    @media (max-width: 600px) {
-        font-size: 12px;
-    }
 }
 
 button:hover {

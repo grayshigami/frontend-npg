@@ -1,30 +1,45 @@
 <template>
-    <div class="form-data">
-        <h1>Crear usuario</h1>
-        <input type="text" placeholder="Nombre" v-model="nuevoElemento.nombre">
-        <input type="text" placeholder="Apellido" v-model="nuevoElemento.apellido">
-        <input type="text" placeholder="Nombre de usuario" v-model="nuevoElemento.nombreUsuario">
-        <input type="text" placeholder="Correo" v-model="nuevoElemento.correo">
-        <input type="password" placeholder="Contraseña" v-model="nuevoElemento.contrasena">
-        <select id="selectTipoUsuario" v-model="nuevoElemento.tipoUsuario">
-            <option :value="0">Usuario</option>
-            <option :value="1">Administrador</option>
-        </select>
-        <button @click="agregarElemento">
-            <i class="fa-solid fa-floppy-disk"></i>
-            Guardar
-        </button>
-        <button @click="goBack">
-            <i class="fa-solid fa-arrow-left"></i>
-            Volver
-        </button>
+    <div class="general">
+        <div class="toolbar">
+            <img src="../assets/logo-negro-Sinfondo.png" alt="" width="10%" height="10%">
+            <h2 class="b-user">Bienvenido {{ name }}</h2>
+            <div class="spacer"></div>
+            <button @click="logout">
+                <i class="fa-solid fa-power-off"></i>
+                Cerrar sesión
+            </button>
+        </div>
+        <div class="form-data">
+            <h1>Crear usuario</h1>
+            <input type="text" placeholder="Nombre" v-model="nuevoElemento.nombre">
+            <input type="text" placeholder="Apellido" v-model="nuevoElemento.apellido">
+            <input type="text" placeholder="Nombre de usuario" v-model="nuevoElemento.nombreUsuario">
+            <input type="text" placeholder="Correo" v-model="nuevoElemento.correo">
+            <input type="password" placeholder="Contraseña" v-model="nuevoElemento.contrasena">
+            <select id="selectTipoUsuario" v-model="nuevoElemento.tipoUsuario">
+                <option :value="0">Usuario</option>
+                <option :value="1">Administrador</option>
+            </select>
+            <button @click="agregarElemento">
+                <i class="fa-solid fa-floppy-disk"></i>
+                Guardar
+            </button>
+            <button @click="goBack">
+                <i class="fa-solid fa-arrow-left"></i>
+                Volver
+            </button>
+            <p v-if="errorMessage">{{ errorMessage }}</p>
+        </div>
     </div>
 </template>
 <script>
+import { ip_address } from '@/ipconst/ip-laptop';
+
 export default {
     name: 'crear-usuario',
     data() {
         return {
+            name: '',
             nuevoElemento: {
                 nombre: '',
                 apellido: '',
@@ -34,26 +49,35 @@ export default {
                 tipoUsuario: 0,
                 registroId: null,
                 actualizacionId: null
-            }
+            },
+            errorMessage: ''
         }
     },
     created() {
         this.nuevoElemento.registroId = localStorage.getItem('user_id');
         this.nuevoElemento.actualizacionId = localStorage.getItem('user_id');
+        this.name = localStorage.getItem('name');
     },
     methods: {
-        goBack() {
-            this.$router.back();
-        },
         async agregarElemento() {
             try {
-                const response = await fetch('http://localhost:3000/usuarios', {
+                const response = await fetch(`http://${ip_address}:3002/usuarios`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(this.nuevoElemento)
                 });
+
+                if (!this.nuevoElemento.nombre) {
+                    this.errorMessage = "Debes ingresar el nombre";
+                }
+                if (!this.nuevoElemento.nombreUsuario) {
+                    this.errorMessage = "Debes ingresar el nombre de usuario";
+                }
+                if (!this.nuevoElemento.contrasena) {
+                    this.errorMessage = "Debes ingresar la contraseña";
+                }
 
                 const nuevoElementoCreado = await response.json();
                 this.$emit('nuevo-elemento', nuevoElementoCreado);
@@ -67,8 +91,15 @@ export default {
                 };
                 this.$router.back();
             } catch (error) {
-                console.error('Error al agregar elemento:', error);
+                this.errorMessage = error.response.data.message;
             }
+        },
+        logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/login-component';
+        },
+        goBack() {
+            this.$router.back();
         }
     }
 }
@@ -76,10 +107,59 @@ export default {
 <style>
 * {
     font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+
+    @media (max-width: 600px) {
+        font-size: 12px;
+    }
+}
+
+p {
+    color: red;
+}
+
+.toolbar {
+    width: 100%;
+    background-color: rgb(21, 96, 130);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: white;
+    box-sizing: border-box;
+
+    @media (max-width: 600px) {
+        font-size: 10px;
+        padding: 3px;
+    }
+}
+
+.toolbar button {
+    border: none;
+}
+
+.spacer {
+    width: 50%;
+
+    @media (max-width: 600px) {
+        width: 0;
+    }
+}
+
+.b-user {
+    margin-left: 20px;
+    margin-right: 180px;
+    font-weight: bold;
+}
+
+h1 {
+    margin-bottom: 10px;
 }
 
 .form-data {
-    margin: 100px auto;
+    margin: 20px auto;
     width: 40%;
     display: flex;
     flex-direction: column;
@@ -95,6 +175,10 @@ input, select, button {
     border-radius: 5px;
     margin-bottom: 10px;
     font-size: 16px;
+
+    @media (max-width: 600px) {
+        font-size: 12px;
+    }
 }
 
 select {
@@ -105,6 +189,10 @@ button {
     color: white;
     background-color: rgb(21, 96, 130);
     font-weight: bold;
+
+    @media (max-width: 600px) {
+        font-size: 12px;
+    }
 }
 
 button:hover {

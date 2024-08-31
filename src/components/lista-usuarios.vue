@@ -1,7 +1,15 @@
 <template>
     <div class="general">
+        <div class="toolbar">
+            <img src="../assets/logo-negro-Sinfondo.png" alt="" width="10%" height="10%">
+            <h2 class="b-user">Bienvenido {{ name }}</h2>
+            <div class="spacer"></div>
+            <button @click="logout">
+                <i class="fa-solid fa-power-off"></i>
+                Cerrar sesión
+            </button>
+        </div>
         <div class="screen-data">
-            <img src="../assets/logo-negro-Sinfondo.png" alt="" width="100" height="80">
             <button @click="goToCreate">
                 <i class="fa-solid fa-plus"></i>
                 Crear usuario
@@ -32,13 +40,13 @@
                         <td>{{ usuario.nombreUsuario }}</td>
                         <td>{{ usuario.correo }}</td>
                         <td>{{ usuario.tipoUsuario == 0 ? 'Usuario' : 'Administrador' }}</td>
-                        <td>{{ usuario.estado == 1 ? 'Activo' : 'Inactivo' }}</td>
+                        <td>{{ usuario.estado === 1 ? 'Activo' : 'Inactivo' }}</td>
                         <td>
                             <button @click="editUsuario(usuario)" :disabled="usuario.estado === 0">
                                 <i class="fa-solid fa-pencil"></i>
                             </button>
                             <button @click="toggleEstado(usuario)">
-                                <i class="fa-solid fa-trash"></i>
+                                <i class="fa-solid fa-power-off"></i>
                             </button>
                         </td>
                     </tr>
@@ -53,6 +61,7 @@
 import axios from 'axios';
 import CrearUsuario from './crear-usuario.vue';
 import EditarUsuario from './editar-usuario.vue';
+import { ip_address } from '@/ipconst/ip-laptop';
 
 export default {
     name: 'lista-usuarios',
@@ -60,10 +69,12 @@ export default {
     data() {
         return {
             usuarios: [],
-            showAll: false,
-            editingUsuarioId: null,
-            userToEdit: null
+            name: '',
+            showAll: false
         }
+    },
+    created() {
+        this.name = localStorage.getItem('name');
     },
     mounted() {
         this.getUsuarios();
@@ -74,9 +85,9 @@ export default {
                 let response;
                 
                 if (this.showAll) {
-                    response = await axios.get('http://localhost:3000/usuarios');
+                    response = await axios.get(`http://${ip_address}:3002/usuarios`);
                 } else {
-                    response = await axios.get('http://localhost:3000/usuarios', {
+                    response = await axios.get(`http://${ip_address}:3002/usuarios`, {
                         params: { estado: 1 }
                     });
                 }
@@ -91,18 +102,13 @@ export default {
             this.getUsuarios();
         },
         editUsuario(usuario) {
-            this.userToEdit = {...usuario};
-            this.$router.push('/editar-usuario');
-        },
-        onUsuarioUpdated() {
-            this.editingUsuarioId = null;
-            this.getUsuarios();
+            this.$router.push({name: 'editar-usuario', query: {usuario: usuario.id}});
         },
         async toggleEstado(usuario) {
             const nuevoEstado = usuario.estado === 1 ? 0 : 1;
 
             try {
-                await axios.put(`http://localhost:3000/usuarios/${usuario.id}`, {estado: nuevoEstado});
+                await axios.put(`http://${ip_address}:3002/usuarios/${usuario.id}`, {estado: nuevoEstado});
                 this.getUsuarios();
             } catch (error) {
                 console.error(error);
@@ -111,15 +117,9 @@ export default {
         async agregarElemento(nuevoElemento) {
             this.usuarios.push(nuevoElemento);
         },
-        async eliminarElemento(id) {
-            try {
-                await fetch(`http://localhost:3000/usuarios/${id}`, {
-                    method: 'DELETE'
-                });
-                this.usuarios = this.usuarios.filter(usuario => usuario.id !== id);
-            } catch (error) {
-                console.error('Error deleting element:', error);
-            }
+        logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/login-component';
         },
         goToCreate() {
             this.$router.push('/crear-usuario')
@@ -133,10 +133,58 @@ export default {
 <style>
 * {
     font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+
+    @media (max-width: 600px) {
+        font-size: 12px;
+        overflow-x: scroll;
+    }
+}
+
+.toolbar {
+    width: 100%;
+    background-color: rgb(21, 96, 130);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: white;
+    box-sizing: border-box;
+
+    @media (max-width: 600px) {
+        font-size: 10px;
+        padding: 3px;
+    }
+}
+
+.toolbar button {
+    height: 45px;
+    border: none;
+}
+
+.spacer {
+    width: 50%;
+
+    @media (max-width: 600px) {
+        width: 0;
+    }
+}
+
+.usuario-header {
+    display: flex;
+    justify-content: center;
+    margin: 10px;
+}
+
+.b-user {
+    margin-left: 20px;
+    margin-right: 200px;
+    font-weight: bold;
 }
 
 .general {
-    margin: 100px auto;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -150,6 +198,10 @@ button {
     border-radius: 5px;
     margin-bottom: 10px;
     font-size: 16px;
+
+    @media (max-width: 600px) {
+        font-size: 12px;
+    }
 }
 
 input, button {
@@ -170,6 +222,10 @@ table {
 
 th, td {
     padding: 8px;
+
+    @media (max-width: 600px) {
+        padding: 4px;
+    }
 }
 
 td {

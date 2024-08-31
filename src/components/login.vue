@@ -12,6 +12,7 @@
     </div>
 </template>
 <script>
+import { ip_address } from '@/ipconst/ip-laptop';
 import axios from 'axios';
 
 export default {
@@ -26,10 +27,12 @@ export default {
     methods: {
         async login() {
             try {
-                const response = await axios.post('http://localhost:3000/auth/login', {
+                const response = await axios.post(`http://${ip_address}:3002/auth/login`, {
                     nombreUsuario: this.nombreUsuario,
                     contrasena: this.contrasena
                 });
+                console.log("Nombreusuario:", this.nombreUsuario);
+                console.log("Contraseña:", this.contrasena);
                 const { access_token, user_type, name, user_id, register_id } = response.data;
                 const tokenExpiration = new Date().getTime() + (response.data.expiresIn * 1000);
                 localStorage.setItem('token', access_token);
@@ -55,10 +58,21 @@ export default {
 <style>
 * {
     font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+
+    @media (max-width: 600px) {
+        font-size: 12px;
+    }
 }
 
 .err {
     color: red;
+}
+
+h1 {
+    margin-bottom: 10px;
 }
 
 .form-data {
@@ -87,12 +101,20 @@ input, button {
     border-radius: 5px;
     margin-bottom: 10px;
     font-size: 16px;
+
+    @media (max-width: 600px) {
+        font-size: 12px;
+    }
 }
 
 button {
     color: white;
     background-color: rgb(21, 96, 130);
     font-weight: bold;
+
+    @media (max-width: 600px) {
+        font-size: 12px;
+    }
 }
 
 button:hover {

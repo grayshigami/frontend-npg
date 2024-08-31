@@ -1,9 +1,10 @@
 import router from "@/router";
 import axios from "axios";
 import { Promise } from "core-js";
+import { ip_address } from "@/ipconst/ip-laptop";
 
 const api = axios.create({
-    baseURL: 'http://localhost:3000'
+    baseURL: `http://${ip_address}:3002`
 });
 
 api.interceptors.response.use(

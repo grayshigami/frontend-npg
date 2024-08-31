@@ -1,22 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-const isAuthenticated = () => {
-    const token = localStorage.getItem('token');
-
-    if (!token) return false;
-
-    const tokenExpiration = localStorage.getItem('tokenExpiration');
-    const now = new Date().getTime();
-
-    if (tokenExpiration && now > tokenExpiration) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('tokenExpiration');
-        return false;
-    }
-
-    return true;
-};
-
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -48,12 +31,14 @@ const router = createRouter({
         {
             path: '/pantalla-usuario',
             name: 'pantalla-usuario',
-            component: () => import("@/components/pantalla-usuario.vue")
+            component: () => import("@/components/pantalla-usuario.vue"),
+            meta: { requiresAuth: true, user_type: 0 }
         },
         {
             path: '/pantalla-administrador',
             name: 'pantalla-administrador',
-            component: () => import("@/components/pantalla-administrador.vue")
+            component: () => import("@/components/pantalla-administrador.vue"),
+            meta: { requiresAuth: true, user_type: 1 }
         },
         {
             path: '/lista-usuarios',
@@ -65,16 +50,13 @@ const router = createRouter({
             name: 'editar-incidencia',
             component: () => import("@/components/editar-incidencia.vue"),
             props: true
+        },
+        {
+            path: '/cambiar-contrasena',
+            name: 'cambiar-contrasena',
+            component: () => import("@/components/cambiar-contrasena.vue")
         }
     ]
 })
-
-router.beforeEach((to, from, next) => {
-    if (to.name !== 'login-component' && !isAuthenticated()) {
-        next({name: 'login-component'})
-    } else {
-        next();
-    }
-});
 
 export default router
